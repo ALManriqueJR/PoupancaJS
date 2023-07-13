@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+    <body>
+        <b>
+           $ Minha Poupança $
+        </b>
+		
+		<hr>
+
+        <p id="Saldo" style="background-color: rgb(117, 237, 108);">
+            Saldo: ________
+			
+        </p>
+
+        <p id="Acoes">
+
+            <input id="valor" placeholder="R$ " ><br><br>
+            <input type="button" value="Depósito" id="deposito" onclick="poupanca.depositar()">
+            <input type="button" value="Saque" id="saque" onclick="poupanca.sacar()"><br><br>
+            <input type="button" value="Recibo de Movimentação" id="recibo" onclick="poupanca.showExtrato()">
+            
+        </p>
+
+		<hr>
+
+        <p id="Extrato" style="background-color: rgb(214, 240, 245);">
+            Extrato:
+        </p>
+        
+    </body>
+
+    <script>
+
+        var dinheiro = document.getElementById("valor");
+        var saidaSaldo = document.getElementById("Saldo");
+		var saidaExtrato = document.getElementById("Extrato");
+		
+        var poupanca = {
+
+            saldo: 0,
+            movimentacao: [],
+
+            depositar: function() {
+                               
+                if (validInput(dinheiro.value)) {
+					
+					var valor  = Number(dinheiro.value);
+					valor = parseFloat(valor).toFixed(2)
+                    this.saldo += Number(valor);
+					saidaSaldo.innerHTML = "R$ " + this.saldo;
+					var test = new Date();
+					var dataTest = test.getDate() + "/" + (test.getMonth()+1) + "/"+ test.getFullYear() + " - " + test.toTimeString().split(' ')[0] + " ";
+					this.movimentacao.push(dataTest + "Depósito de R$ " + valor);
+					
+                } else {
+                    alert("Entrada Inválida");
+                }
+
+                dinheiro.value = "";
+                dinheiro.focus();
+                
+            },
+
+            sacar: function() {
+
+                if (validInput(dinheiro.value)) {
+                    if(dinheiro.value<=this.saldo){
+						var valor  = Number(dinheiro.value);
+						valor = parseFloat(valor).toFixed(2)
+						this.saldo -= Number(valor);
+						saidaSaldo.innerHTML = "R$ " + this.saldo;
+						var test = new Date();
+						var dataTest = test.getDate() + "/" + (test.getMonth()+1) + "/"+ test.getFullYear() + " - " + test.toTimeString().split(' ')[0] + " ";
+						this.movimentacao.push(dataTest + "Saque de R$ " + valor);
+                    }else{
+                        alert("Saldo Insuficiente");
+                    }
+                }else {
+                    alert("Entrada Inválida");
+                }
+
+                dinheiro.value = "";
+                dinheiro.focus();
+			
+                
+            },
+
+            showExtrato: function() {
+			
+				saidaExtrato.innerHTML = "Extrato: <br><br>";
+				
+				for(i=0;i<=this.movimentacao.length-1;i++){
+					
+					saidaExtrato.innerHTML += this.movimentacao[i] + "<br>";
+				}
+
+            }
+        }
+		
+		
+		
+		function validInput(valor) {
+
+			valor = Number(valor);
+
+			if (valor>0 && valor!=isNaN) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+        
+    </script>
+
+</html>
